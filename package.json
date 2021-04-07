@@ -1,0 +1,21 @@
+{
+  "name": "snow-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/jairojunior482/snow-bot.git",
+  "author": "jairojunior482 <jairojunior482@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "sucrase ./src -d ./dist --transforms imports",
+    "start": "node dist/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "sucrase": "^3.17.1"
+  }
+}
