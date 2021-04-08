@@ -9,6 +9,7 @@ import Guild from "./models/Guild";
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
+client.queues = new Map();
 
 fs.readdir(path.join(__dirname, "/commands/"), (erro, folders) => {
   if (erro) return;
