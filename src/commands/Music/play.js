@@ -11,6 +11,10 @@ import ytdl from "ytdl-core-discord";
  */
 
 function execute(client, msg, args) {
+  const hasRole = msg.member.roles.cache.has("830430436236197909")
+  if (!hasRole) {
+    return msg.channel.send("Voçê precisa do cargo de dj");
+  }
   const voiceChannel = msg.member.voice.channel;
   const musicName = args.join("");
   const erroEmbed = new MessageEmbed()
@@ -20,6 +24,12 @@ function execute(client, msg, args) {
 
   if (!voiceChannel) {
     erroEmbed.addField("Voçê precisa está em um canal de voz",
+      "\`\`\`Tente novamente\`\`\`")
+    return msg.channel.send(erroEmbed);
+  }
+
+  if (!musicName) {
+    erroEmbed.addField("Voçê precisa digitar um nome de uma música",
       "\`\`\`Tente novamente\`\`\`")
     return msg.channel.send(erroEmbed);
   }
@@ -45,7 +55,8 @@ function execute(client, msg, args) {
         .setTitle(":white_check_mark: Fila")
         .addField("Fila atualizada",
           `\`\`\`${music.title} \nFoi adicionda a fila\`\`\``)
-        .setTimestamp()
+        .setTimestamp();
+      client.queues.set(msg.guild.id, queue);
       return msg.channel.send(queueEmebd);
     }
     return playSong(client, msg, music);
@@ -73,30 +84,29 @@ async function playSong(client, msg, music) {
       connection: await msg.member.voice.channel.join(),
       songs: [music]
     }
-    queue.dispatcher = await queue.connection.play(await ytdl(music.url,
-      { highWaterMark: 1 << 25, filter: "audioonly" }), { type: "opus" });
-
-    queue.dispatcher.setVolume(queue.volume / 10);
-
-    queue.dispatcher.on("finish", () => {
-      queue.songs.shift();
-      return playSong(client, msg, queue.songs[0]);
-    });
-
-    client.queues.set(msg.guild.id, queue);
-    const sucessEmbed = new MessageEmbed()
-      .setColor("#0974ed")
-      .setAuthor(`${client.user.username}`, client.user.avatarURL())
-      .addField("**Tocando** :musical_note:",
-        `\`\`\`${music.title}\`\`\``)
-      .setFooter(`Requisitado por ${msg.author.username}`)
-      .setTimestamp();
-    return msg.channel.send(sucessEmbed);
   }
+  queue.dispatcher = await queue.connection.play(await ytdl(music.url,
+    { highWaterMark: 1 << 25, filter: "audioonly" }), { type: "opus" });
+
+  queue.dispatcher.setVolume(queue.volume / 10);
+  queue.dispatcher.on("finish", async () => {
+    queue.songs.shift();
+    client.queues.set(msg.guild.id, queue);
+    playSong(client, msg, queue.songs[0]);
+  });
+  client.queues.set(msg.guild.id, queue);
+  const sucessEmbed = new MessageEmbed()
+    .setColor("#0974ed")
+    .setAuthor(`${client.user.username}`, client.user.avatarURL())
+    .addField("**Tocando** :musical_note:",
+      `\`\`\`${music.title}\`\`\``)
+    .setFooter(`Requisitado por ${msg.author.username}`)
+    .setTimestamp();
+  return msg.channel.send(sucessEmbed);
 }
 
 export default {
   name: "play",
-  aliases: "tocar",
+  aliases: ["tocar"],
   execute
 }

@@ -37,13 +37,15 @@ client.on("message", async msg => {
 
   if (msg.author.bot || msg.channel.type == "dm") return;
 
-  if (msg.content == `<@!${client.user.id}>`) {
+  if (msg.content == `<@!${client.user.id}>` ||
+    msg.content == `<@${client.user.id}>`) {
     const helloEmbed = new Discord.MessageEmbed()
       .setColor("#0974ed")
       .setAuthor(`${client.user.username}`)
       .setTimestamp()
       .addField("Meu prefix nesse servidor é",
         `\`\`\`js\n${prefix}\n\`\`\``)
+      .addField("Meu convite", "[Link](http://example.com)")
       .setFooter(`Requisitado por ${msg.author.username}`);
     return msg.channel.send(helloEmbed);
   }
