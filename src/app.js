@@ -26,6 +26,13 @@ fs.readdir(path.join(__dirname, "/commands/"), (erro, folders) => {
   });
 });
 
+client.on("guildCreate", async guild => {
+  const existsGuild = await Guild.findOne({ guild_id: guild.id });
+  if (existsGuild) return;
+
+  await Guild.create({ guild_id: guild.id });
+});
+
 client.on("ready", () => {
   console.log(`(${client.user.username}): Iniciado com sucesso!`);
 });
@@ -33,7 +40,7 @@ client.on("ready", () => {
 client.on("message", async msg => {
   let guild = await Guild.findOne({ guild_id: msg.guild.id });
 
-  const prefix = guild ?  guild.prefix : "s.";
+  const prefix = guild ? guild.prefix : "s.";
   let commandChannel
 
   const guildCommandChannel = guild.channels.commands
