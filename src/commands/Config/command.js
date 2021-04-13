@@ -1,12 +1,6 @@
+import { MessageEmbed } from "discord.js";
+
 import Guild from "../../models/Guild";
-
-import { Client, Message, MessageEmbed } from "discord.js";
-
-/**
- * @param {Client} client 
- * @param {Message} msg 
- * @param {String[]} args 
- */
 
 async function execute(client, msg, args) {
   const hasPermission = msg.member.permissions.has("ADMINISTRATOR");
@@ -15,27 +9,26 @@ async function execute(client, msg, args) {
   const guild_id = msg.guild.id;
   const guild = await Guild.findOne({ guild_id });
 
-  const channelInfo = client.channels.cache.get(guild.channels.commands.id);
+  const channelInfo = client.channels.cache.get(guild.channels.commands.channel_id);
 
-  if (!subCommand) {
+  if (!subCommand || subCommand == "info'") {
+    if (!channelInfo) {
+      return msg.channel.send("Nenhum canal setado");
+    }
     const channelInfoEmbed = new MessageEmbed()
       .setColor("#0974ed")
-      .setTitle("Informações sobre o canal")
+      .setDescription("Informações sobre o canal")
       .addFields(
-        // {
-        //   name: "Canal",
-        //   value: `\`\`\`<#${channelInfo.id}>\`\`\``
-        // },
         {
           name: "Canal",
           value: `<#${channelInfo.id}>`
         },
         {
-          name: "Id",
+          name: "Id do canal",
           value: `\`\`\`${channelInfo.id}\`\`\``
         },
         {
-          name: "Status",
+          name: "Status do sistema",
           value: `\`\`\`${guild.channels.commands.status ? "ativado" : "desativado"}\`\`\``
         }
       )
@@ -50,7 +43,7 @@ async function execute(client, msg, args) {
     }
     await Guild.findOneAndUpdate({ guild_id }, {
       $set: {
-        "channels.commands.id": mentionChannel.id
+        "channels.commands.channel_id": mentionChannel.id
       }
     });
     return msg.channel.send(`${mentionChannel.name} Setado com sucesso`);

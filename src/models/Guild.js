@@ -13,9 +13,23 @@ const GuildSchema = new Schema({
         type: Boolean,
         default: false
       },
-      id: {
+      channel_id: {
         type: String,
         default: ""
+      }
+    },
+    welcome: {
+      status: {
+        type: Boolean,
+        default: false
+      },
+      channel_id: {
+        type: String,
+        default: ""
+      },
+      message: {
+        type: String,
+        default: "Sejá bem vindo(a) {member}, ao servidor {server}"
       }
     }
   }

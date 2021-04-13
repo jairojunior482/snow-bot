@@ -46,7 +46,7 @@ client.on("message", async msg => {
   const guildCommandChannel = guild.channels.commands
 
   if (guildCommandChannel.status) {
-    commandChannel = client.channels.cache.get(guildCommandChannel.id);
+    commandChannel = client.channels.cache.get(guildCommandChannel.channel_id);
   } else {
     commandChannel = msg.channel;
   }
@@ -59,9 +59,9 @@ client.on("message", async msg => {
     msg.content == `<@${client.user.id}>`) {
     const helloEmbed = new Discord.MessageEmbed()
       .setColor("#0974ed")
-      .setAuthor(`${client.user.username}`)
+      .setAuthor(`${client.user.username}`, client.user.avatarURL())
       .setTimestamp()
-      .addField("Meu prefix nesse servidor é",
+      .addField("Meu prefixo nesse servidor é",
         `\`\`\`js\n${prefix}\n\`\`\``)
       .addField("Me adicione", "[Convite](http://google.com)")
       .setFooter(`Requisitado por ${msg.author.username}`);
