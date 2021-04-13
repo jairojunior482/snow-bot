@@ -6,6 +6,18 @@ const GuildSchema = new Schema({
   prefix: {
     type: String,
     default: "s."
+  },
+  channels: {
+    commands: {
+      status: {
+        type: Boolean,
+        default: false
+      },
+      id: {
+        type: String,
+        default: ""
+      }
+    }
   }
 });
 

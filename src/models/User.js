@@ -12,7 +12,7 @@ const UserSchema = new Schema({
       type: Number,
       default: 0
     }
-  }
+  },
 });
 
 export default mongoose.model("User", UserSchema);

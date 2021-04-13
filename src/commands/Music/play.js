@@ -100,7 +100,6 @@ async function playSong(client, msg, music) {
     .setAuthor(`${client.user.username}`, client.user.avatarURL())
     .addField("**Tocando** :musical_note:",
       `\`\`\`${music.title}\`\`\``)
-    .setFooter(`Requisitado por ${msg.author.username}`)
     .setTimestamp();
   return msg.channel.send(sucessEmbed);
 }

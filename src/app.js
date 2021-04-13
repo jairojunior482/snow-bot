@@ -31,9 +31,20 @@ client.on("ready", () => {
 });
 
 client.on("message", async msg => {
-  const guild = await Guild.findOne({ guild_id: msg.guild.id });
+  let { prefix, channels } = await Guild.findOne({ guild_id: msg.guild.id });
 
-  const prefix = guild ? guild.prefix : "s.";
+  prefix ? prefix : "s.";
+  let commandChannel
+
+  const guildCommandChannel = channels.commands
+
+  if (guildCommandChannel.status) {
+    commandChannel = client.channels.cache.get(guildCommandChannel.id);
+  } else {
+    commandChannel = msg.channel;
+  }
+
+  if (commandChannel.id != msg.channel.id) return;
 
   if (msg.author.bot || msg.channel.type == "dm") return;
 
@@ -45,7 +56,7 @@ client.on("message", async msg => {
       .setTimestamp()
       .addField("Meu prefix nesse servidor é",
         `\`\`\`js\n${prefix}\n\`\`\``)
-      .addField("Meu convite", "[Link](http://example.com)")
+      .addField("Me adicione", "[Convite](http://google.com)")
       .setFooter(`Requisitado por ${msg.author.username}`);
     return msg.channel.send(helloEmbed);
   }
