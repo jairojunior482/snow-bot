@@ -33,7 +33,7 @@ client.on("ready", () => {
 client.on("message", async msg => {
   let { prefix, channels } = await Guild.findOne({ guild_id: msg.guild.id });
 
-  prefix ? prefix : "s.";
+  prefix ? prefix = prefix : prefix = "s.";
   let commandChannel
 
   const guildCommandChannel = channels.commands
