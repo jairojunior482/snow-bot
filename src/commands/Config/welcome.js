@@ -1,6 +1,14 @@
-import { MessageEmbed } from "discord.js";
+import { Client, Message ,MessageEmbed } from "discord.js";
 
 import Guild from "../../models/Guild";
+
+/**
+ * 
+ * @param {Client} client 
+ * @param {Message} msg 
+ * @param {String[]} args 
+ * @returns 
+ */
 
 async function execute(client, msg, args) {
   const hasPermission = msg.member.permissions.has("ADMINISTRATOR");
@@ -13,7 +21,7 @@ async function execute(client, msg, args) {
 
   if (!subCommand || subCommand == "info") {
     if (!channelInfo) {
-      return msg.channel.send("Nenhum canal setado"); 
+      return msg.channel.send("Nenhum canal setado");
     }
     const channelInfoEmbed = new MessageEmbed()
       .setColor("#0974ed")
@@ -72,6 +80,35 @@ async function execute(client, msg, args) {
       }
     });
     return msg.channel.send("Canal de comandos desativado");
+  }
+
+  if (subCommand == "msg") {
+    const welcomeMessage = args.join(" ").slice(args[0].length + 1);
+    await Guild.findOneAndUpdate({ guild_id }, {
+      $set: {
+        "channels.welcome.message": welcomeMessage
+      }
+    });
+    return msg.channel.send("Message de welcome alterada com sucesso");
+  }
+
+  if (subCommand == "test") {
+    const welcomeEmbed = new MessageEmbed()
+      .setColor("#0974ed")
+      .setAuthor(client.user.username, client.user.avatarURL())
+      .setTitle("Bem-vindo(a)")
+      .setTimestamp();
+    const guildName = msg.guild.name;
+    const memberName = msg.author.username;
+    const welcomeMessage = guild.channels.welcome.message
+      .replace(/{member}/g, memberName)
+      .replace(/{server}/g, guildName).split(",");
+      welcomeMessage.forEach(message => {
+      welcomeEmbed.addField(message, "\u200b");
+    })
+    const welcomeChannel = client.channels.cache
+      .get(guild.channels.welcome.channel_id);
+    return welcomeChannel.send(welcomeEmbed);
   }
 
 }

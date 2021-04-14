@@ -7,7 +7,7 @@ import { Client, Message, MessageEmbed } from "discord.js";
  */
 
 function execute(client, msg, args) {
-  const reportedBy = msg.author.username;
+  const reportedBy = msg.author;
   const report = args.join("");
   const reportChannel = client.guilds.cache.get("829368970858725456")
     .channels.cache.get("831324936944615444");
@@ -15,7 +15,8 @@ function execute(client, msg, args) {
     .setColor("#0974ed")
     .setTitle("New Report")
     .addFields(
-      { name: "Reportado por", value: `\`\`\`${reportedBy}\`\`\`` },
+      { name: "Reportado por", value: `\`\`\`${reportedBy.username}\`\`\`` },
+      { name: "Id do reportador", value: `\`\`\`${reportedBy.id}\`\`\`` },
       { name: "Report", value: `\`\`\`${report}\`\`\`` },
     )
     .setTimestamp();
