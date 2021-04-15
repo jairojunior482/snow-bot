@@ -2,12 +2,6 @@ import Guild from "../../models/Guild";
 
 import { Client, Message } from "discord.js";
 
-/**
- * 
- * @param {Client} client 
- * @param {Message} msg 
- */
-
 async function execute(client, msg, args) {
   const guild_id = msg.guild.id;
   const hasPermission = msg.member.permissions.has("ADMINISTRATOR");

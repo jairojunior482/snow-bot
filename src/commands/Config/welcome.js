@@ -2,14 +2,6 @@ import { Client, Message ,MessageEmbed } from "discord.js";
 
 import Guild from "../../models/Guild";
 
-/**
- * 
- * @param {Client} client 
- * @param {Message} msg 
- * @param {String[]} args 
- * @returns 
- */
-
 async function execute(client, msg, args) {
   const hasPermission = msg.member.permissions.has("ADMINISTRATOR");
   if (!hasPermission) return;
